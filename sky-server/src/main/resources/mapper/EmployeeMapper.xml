@@ -11,4 +11,13 @@
     <select id="getByUsername" resultType="com.sky.entity.Employee">
         select * from employee where username = #{username}
     </select>
+    <select id="pageSelect" resultType="com.sky.entity.Employee">
+        SELECT * FROM employee
+        <where>
+            <if test="name != null and name != ''">
+                AND `name` LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
 </mapper>
