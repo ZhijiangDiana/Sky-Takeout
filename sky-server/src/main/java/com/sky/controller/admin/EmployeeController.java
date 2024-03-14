@@ -77,7 +77,7 @@ public class EmployeeController {
         return Result.success();
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation("添加员工")
     public Result<String> add(@RequestBody EmployeeDTO employeeDTO) {
         employeeService.add(employeeDTO);
@@ -97,4 +97,19 @@ public class EmployeeController {
         employeeService.updateStatus(id, status);
         return Result.success();
     }
+
+    @GetMapping("/{id}")
+    @ApiOperation("查询单个员工")
+    public Result<Employee> idSelect(@PathVariable Integer id) {
+        Employee employee = employeeService.idSelect(id);
+        return Result.success(employee);
+    }
+
+    @PutMapping("")
+    @ApiOperation("修改员工信息")
+    public Result<String> updateInfo(@RequestBody EmployeeDTO employeeDTO) {
+        employeeService.updateInfo(employeeDTO);
+        return Result.success();
+    }
+
 }

@@ -21,4 +21,6 @@ public interface EmployeeMapper {
     Page<Employee> pageSelect(EmployeePageQueryDTO employeePageQueryDTO);
 
     void update(Employee employee);
+
+    Employee idSelect(@Param("id") Integer id);
 }
