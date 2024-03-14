@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -93,6 +92,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Page<Employee> page = employeeMapper.pageSelect(employeePageQueryDTO);
 
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        Employee emp = Employee.builder()
+                .id(id)
+                .status(status)
+                .build();
+
+        employeeMapper.update(emp);
     }
 
 }

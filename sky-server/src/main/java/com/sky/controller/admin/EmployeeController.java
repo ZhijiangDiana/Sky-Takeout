@@ -15,10 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,10 +84,17 @@ public class EmployeeController {
         return Result.success();
     }
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     @ApiOperation("员工分页查询")
-    public Result<PageResult> pageSelect(@RequestBody EmployeePageQueryDTO employeePageQueryDTO) {
+    public Result<PageResult> pageSelect(EmployeePageQueryDTO employeePageQueryDTO) {
         PageResult pageResult = employeeService.pageSelect(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用员工账号")
+    public Result<String> updateStatus(@PathVariable("status") Integer status, Long id) {
+        employeeService.updateStatus(id, status);
+        return Result.success();
     }
 }
