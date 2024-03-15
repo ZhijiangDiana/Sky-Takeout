@@ -35,7 +35,7 @@ public class AutoFillAspect {
      */
     @Before("autoFillPointCut()")
     public void autoFill(JoinPoint joinPoint) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        log.info("开始1进行公共字段自动填充...");
+//        log.info("开始1进行公共字段自动填充...");
 
         // 获取操作类型
         MethodSignature signature = (MethodSignature) joinPoint.getSignature(); // 获取方法签名对象

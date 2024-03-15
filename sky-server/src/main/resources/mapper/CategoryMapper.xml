@@ -37,4 +37,7 @@
             <if test="type != null">AND type = #{type}</if>
         </where>
     </select>
+    <select id="selectById" resultType="com.sky.entity.Category">
+        SELECT * FROM category WHERE id = #{id};
+    </select>
 </mapper>
