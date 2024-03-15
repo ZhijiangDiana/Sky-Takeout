@@ -25,4 +25,6 @@ public interface CategoryMapper {
     void delete(@Param("id") Long id);
 
     List<Category> selectByCondition(@Param("type") Integer type);
+
+    Category selectById(@Param("id") Long id);
 }
