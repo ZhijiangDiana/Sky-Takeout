@@ -81,8 +81,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> conditionSelect(Integer type) {
-        List<Category> res = categoryMapper.selectByCondition(type);
-
-        return null;
+        return categoryMapper.selectByCondition(type);
     }
 }
