@@ -28,7 +28,7 @@
         SELECT * FROM category
         <where>
             <if test="type != null">AND type = #{type}</if>
-            <if test="name != null">AND `name` LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="name != null and name != ''">AND `name` LIKE CONCAT('%', #{name}, '%')</if>
         </where>
     </select>
     <select id="selectByCondition" resultType="com.sky.entity.Category">

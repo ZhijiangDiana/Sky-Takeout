@@ -13,4 +13,13 @@
     <delete id="deleteByCatId">
         DELETE FROM dish WHERE category_id = #{id}
     </delete>
+    <select id="selectPage" resultType="com.sky.vo.DishVO">
+        SELECT d.*, c.name AS category_name FROM dish d LEFT OUTER JOIN category c ON d.category_id = c.id
+        <where>
+            <if test="name != null and name != ''">AND d.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="categoryId != null">AND category_id = #{categoryId}</if>
+            <if test="status != null">AND d.status = #{status}</if>
+        </where>
+        ORDER BY d.create_time DESC
+    </select>
 </mapper>
