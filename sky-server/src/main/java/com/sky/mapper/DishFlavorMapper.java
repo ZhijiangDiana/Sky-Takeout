@@ -12,4 +12,6 @@ public interface DishFlavorMapper {
     void insert(DishFlavor flavor);
 
     List<DishFlavor> selectByDishId(@Param("id") Long id);
+
+    void deleteByDishId(@Param("id") Long id);
 }

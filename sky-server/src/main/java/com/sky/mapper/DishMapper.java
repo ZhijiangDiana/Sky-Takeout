@@ -20,4 +20,8 @@ public interface DishMapper {
     void insert(Dish dish);
 
     Page<DishVO> selectPage(DishPageQueryDTO dishPageQueryDTO);
+
+    Dish selectById(@Param("id") Long id);
+
+    void deleteById(@Param("id") Long id);
 }

@@ -4,6 +4,9 @@
     <insert id="insert">
         INSERT INTO dish_flavor (dish_id, name, value) VALUES (#{dishId}, #{name}, #{value});
     </insert>
+    <delete id="deleteByDishId">
+        DELETE FROM dish_flavor WHERE dish_id = #{id};
+    </delete>
     <select id="selectByDishId" resultType="com.sky.entity.DishFlavor">
         SELECT * FROM dish_flavor WHERE dish_id = #{id};
     </select>
