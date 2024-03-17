@@ -44,4 +44,7 @@
     <select id="selectById" resultType="com.sky.entity.Dish">
         SELECT * FROM dish WHERE id = #{id};
     </select>
+    <select id="selectByCatId" resultType="com.sky.entity.Dish">
+        SELECT * FROM dish WHERE category_id = #{categoryId};
+    </select>
 </mapper>

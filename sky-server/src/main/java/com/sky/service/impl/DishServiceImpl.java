@@ -109,4 +109,18 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insert(dishFlavor);
         }
     }
+
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
+    }
+
+    @Override
+    public List<Dish> catIdSelect(Integer categoryId) {
+        return dishMapper.selectByCatId(categoryId);
+    }
 }
