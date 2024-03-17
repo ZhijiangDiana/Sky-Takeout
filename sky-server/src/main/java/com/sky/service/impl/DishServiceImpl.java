@@ -15,6 +15,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DishServiceImpl implements DishService {
     @Autowired
     private DishMapper dishMapper;
@@ -81,5 +83,30 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.deleteByDishId(id);
         }
 
+    }
+
+    @Override
+    public DishVO idSelect(Long id) {
+        Dish dish = dishMapper.selectById(id);
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavorMapper.selectByDishId(id));
+        return dishVO;
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Override
+    public void update(DishDTO dishDTO) {
+        // 修改dish本体数据
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+        dishMapper.update(dish);
+        // 修改口味数据
+        dishFlavorMapper.deleteByDishId(dish.getId());
+        log.info(dishDTO.getFlavors().toString());
+        for (DishFlavor dishFlavor : dishDTO.getFlavors()) {
+            dishFlavor.setDishId(dish.getId());
+            dishFlavorMapper.insert(dishFlavor);
+        }
     }
 }

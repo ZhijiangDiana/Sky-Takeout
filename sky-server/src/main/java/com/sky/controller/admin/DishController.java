@@ -6,12 +6,14 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -40,6 +42,20 @@ public class DishController {
     @ApiOperation("删除菜品")
     public Result<String> delete(@RequestParam List<Long> ids) {
         dishService.delete(ids);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("查询单个菜品")
+    public Result<DishVO> idSelect(@PathVariable Long id) {
+        DishVO res = dishService.idSelect(id);
+        return Result.success(res);
+    }
+
+    @PutMapping("")
+    @ApiOperation(("修改菜品"))
+    public Result<String> update(@RequestBody DishDTO dishDTO) {
+        dishService.update(dishDTO);
         return Result.success();
     }
 }

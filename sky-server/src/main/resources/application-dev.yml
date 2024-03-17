@@ -4,10 +4,10 @@ sky:
     host: localhost
     port: 3306
     database: sky_take_out
-    username: root
-    password: wqs926926
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   alioss:
     endpoint: oss-cn-hangzhou.aliyuncs.com
     bucket-name: sky-takeout-114514
-    access-key-id: LTAI5tNoNgAHGjcdVBgeTQXz
-    access-key-secret: Ik2SG4A6yDFOkhtv55NTpj6kD6SKXP
+    access-key-id: ${OSS_ACCESS_KEY_ID}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET}

@@ -24,4 +24,7 @@ public interface DishMapper {
     Dish selectById(@Param("id") Long id);
 
     void deleteById(@Param("id") Long id);
+
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }

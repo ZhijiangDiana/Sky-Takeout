@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public Result exceptionHandler(BaseException ex){
         log.error("异常信息：{}", ex.getMessage());
+        ex.printStackTrace();
         return Result.error(ex.getMessage());
     }
 
@@ -35,6 +36,8 @@ public class GlobalExceptionHandler {
             String msg = username + MessageConstant.ALREADY_EXIST;
             return Result.error(msg);
         }
+        e.printStackTrace();
+        log.error("异常信息：{}", message);
 
         return Result.error(MessageConstant.UNKNOWN_ERROR);
     }
