@@ -2,10 +2,13 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -16,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class SetmealServiceImpl implements SetmealService {
@@ -44,5 +49,15 @@ public class SetmealServiceImpl implements SetmealService {
         PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
         Page<SetmealVO> res = setmealMapper.selectPage(setmealPageQueryDTO);
         return new PageResult(res.getTotal(), res.getResult());
+    }
+
+    @Override
+    public void batchDelete(List<Long> ids) {
+        // 检查套餐是否已启用
+        for (Long id : ids)
+            if (setmealMapper.selectById(id).getStatus() == StatusConstant.ENABLE)
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+        // 批量删除
+        setmealMapper.deleteByIds(ids);
     }
 }

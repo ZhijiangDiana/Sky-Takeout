@@ -13,6 +13,9 @@
     <delete id="deleteByCatId">
         DELETE FROM setmeal WHERE category_id = #{id};
     </delete>
+    <delete id="deleteByIds">
+        DELETE FROM setmeal WHERE id IN <foreach collection="ids" item="id" separator=", " open="(" close=")">#{id}</foreach>
+    </delete>
     <select id="selectPage" resultType="com.sky.vo.SetmealVO">
         SELECT sm.*, c.name AS category_name FROM setmeal sm LEFT OUTER JOIN category c ON sm.category_id = c.id
         <where>
@@ -20,5 +23,8 @@
             <if test="name != null and name != ''">AND sm.name LIKE CONCAT('%', #{name}, '%')</if>
             <if test="status != null">AND sm.status = #{status}</if>
         </where>
+    </select>
+    <select id="selectById" resultType="com.sky.entity.Setmeal">
+        SELECT * FROM setmeal WHERE id = #{id};
     </select>
 </mapper>

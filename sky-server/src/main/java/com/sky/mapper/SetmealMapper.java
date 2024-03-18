@@ -9,6 +9,8 @@ import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface SetmealMapper {
     @AutoFill(value = OperationType.UPDATE)
@@ -20,4 +22,8 @@ public interface SetmealMapper {
     void insert(Setmeal setmeal);
 
     Page<SetmealVO> selectPage(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    Setmeal selectById(@Param("id") Long id);
+
+    void deleteByIds(List<Long> ids);
 }
