@@ -26,4 +26,8 @@ public interface SetmealMapper {
     Setmeal selectById(@Param("id") Long id);
 
     void deleteByIds(List<Long> ids);
+
+    SetmealVO selectWithCatById(@Param("id") Long id);
+
+    void update(Setmeal setmeal);
 }

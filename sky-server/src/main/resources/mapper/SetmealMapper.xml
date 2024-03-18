@@ -10,6 +10,21 @@
     <update id="updateStatusByCatId">
         UPDATE setmeal SET status = #{status} WHERE category_id = #{id};
     </update>
+    <update id="update">
+        UPDATE setmeal
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId}, </if>
+            <if test="name != null and name != ''">`name` = #{name}, </if>
+            <if test="price != null">price = #{price}, </if>
+            <if test="status != null">`status` = #{status}, </if>
+            <if test="description != null and description != ''">`description` = #{description}, </if>
+            <if test="image != null and image != ''">image = #{image}, </if>
+            <if test="createTime != null">create_time = #{createTime}, </if>
+            <if test="updateTime != null">update_time = #{updateTime}, </if>
+            <if test="updateUser != null">update_user = #{updateUser}, </if>
+            <if test="createUser != null">create_user = #{createUser}, </if>
+        </set>
+    </update>
     <delete id="deleteByCatId">
         DELETE FROM setmeal WHERE category_id = #{id};
     </delete>
@@ -26,5 +41,9 @@
     </select>
     <select id="selectById" resultType="com.sky.entity.Setmeal">
         SELECT * FROM setmeal WHERE id = #{id};
+    </select>
+    <select id="selectWithCatById" resultType="com.sky.vo.SetmealVO">
+        SELECT sm.*, c.name AS category_name FROM setmeal sm LEFT OUTER JOIN category c ON sm.category_id = c.id
+        WHERE sm.id = #{id};
     </select>
 </mapper>

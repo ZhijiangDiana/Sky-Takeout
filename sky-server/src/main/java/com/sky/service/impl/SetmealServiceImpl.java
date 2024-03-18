@@ -60,4 +60,26 @@ public class SetmealServiceImpl implements SetmealService {
         // 批量删除
         setmealMapper.deleteByIds(ids);
     }
+
+    @Override
+    public SetmealVO selectById(Long id) {
+        SetmealVO setmealVO = setmealMapper.selectWithCatById(id);
+        setmealVO.setSetmealDishes(setmealDishMapper.selectBySetmealId(id));
+        return setmealVO;
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        // 修改setmeal表
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        setmealMapper.update(setmeal);
+        // 修改setmeal_dish表
+        setmealDishMapper.deleteBySetmealId(setmeal.getId());
+        for (SetmealDish setmealDish : setmealDTO.getSetmealDishes()) {
+            setmealDish.setSetmealId(setmeal.getId());
+            setmealDishMapper.insert(setmealDish);
+        }
+    }
 }
