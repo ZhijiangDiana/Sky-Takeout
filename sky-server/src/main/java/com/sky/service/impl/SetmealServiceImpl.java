@@ -82,4 +82,13 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.insert(setmealDish);
         }
     }
+
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        Setmeal setmeal = Setmeal.builder()
+                .id(id)
+                .status(status)
+                .build();
+        setmealMapper.update(setmeal);
+    }
 }
