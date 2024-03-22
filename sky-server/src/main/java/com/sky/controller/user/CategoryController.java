@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.annotation.FilterDisabled;
 import com.sky.entity.Category;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
@@ -25,6 +26,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     @ApiOperation("查询所有分类")
+    @FilterDisabled
     public Result<List<Category>> conditionSelect(@RequestParam(required = false) Integer type) {
         List<Category> res = categoryService.conditionSelect(type);
         return Result.success(res);

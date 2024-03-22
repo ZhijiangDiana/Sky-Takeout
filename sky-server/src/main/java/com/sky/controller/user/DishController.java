@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.annotation.FilterDisabled;
 import com.sky.entity.Dish;
 import com.sky.result.Result;
 import com.sky.service.DishService;
@@ -24,6 +25,7 @@ public class DishController {
 
     @GetMapping("/list")
     @ApiOperation("根据分类id查询菜品")
+    @FilterDisabled
     public Result<List<DishVO>> selectByCat(Long categoryId) {
         List<DishVO> res = dishService.catIdSelectWithFlavors(categoryId);
         return Result.success(res);
