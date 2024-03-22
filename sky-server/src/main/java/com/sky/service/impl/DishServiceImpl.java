@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -122,5 +123,13 @@ public class DishServiceImpl implements DishService {
     @Override
     public List<Dish> catIdSelect(Integer categoryId) {
         return dishMapper.selectByCatId(categoryId);
+    }
+
+    @Override
+    public List<DishVO> catIdSelectWithFlavors(Long categoryId) {
+        List<DishVO> res = dishMapper.selectByCatIdWithCatName(categoryId);
+        for (DishVO dishVO : res)
+            dishVO.setFlavors(dishFlavorMapper.selectByDishId(dishVO.getId()));
+        return res;
     }
 }

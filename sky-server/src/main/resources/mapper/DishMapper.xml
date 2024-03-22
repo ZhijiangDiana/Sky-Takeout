@@ -47,4 +47,9 @@
     <select id="selectByCatId" resultType="com.sky.entity.Dish">
         SELECT * FROM dish WHERE category_id = #{categoryId};
     </select>
+    <select id="selectByCatIdWithCatName" resultType="com.sky.vo.DishVO">
+        SELECT d.*, c.name AS category_name FROM dish d
+            LEFT OUTER JOIN category c ON d.category_id = c.id
+        WHERE category_id = #{categoryId};
+    </select>
 </mapper>

@@ -3,9 +3,11 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.CategoryConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.entity.Dish;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -52,12 +55,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .status(status)
                 .build();
         categoryMapper.update(category);
-        category = categoryMapper.selectById(id);
-        // 禁用一个分类时，需要同时禁用其下属的所有菜品
-        if (CategoryConstant.DISH_TYPE.equals(category.getType()))
-            dishMapper.updateStatusByCatId(id, status);
-        else if (CategoryConstant.SETMEAL.equals(category.getType()))
-            setmealMapper.updateStatusByCatId(id, status);
     }
 
     @Override

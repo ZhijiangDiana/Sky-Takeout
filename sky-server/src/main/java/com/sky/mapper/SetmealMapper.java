@@ -13,9 +13,6 @@ import java.util.List;
 
 @Mapper
 public interface SetmealMapper {
-    @AutoFill(value = OperationType.UPDATE)
-    void updateStatusByCatId(@Param("id") Long id, @Param("status") Integer status);
-
     void deleteByCatId(@Param("id") Long id);
 
     @AutoFill(value = OperationType.INSERT)
@@ -30,4 +27,6 @@ public interface SetmealMapper {
     SetmealVO selectWithCatById(@Param("id") Long id);
 
     void update(Setmeal setmeal);
+
+    List<Setmeal> selectByCatId(@Param("categoryId") Long categoryId);
 }

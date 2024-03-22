@@ -46,4 +46,7 @@
         SELECT sm.*, c.name AS category_name FROM setmeal sm LEFT OUTER JOIN category c ON sm.category_id = c.id
         WHERE sm.id = #{id};
     </select>
+    <select id="selectByCatId" resultType="com.sky.entity.Setmeal">
+        SELECT * FROM setmeal WHERE category_id = #{categoryId};
+    </select>
 </mapper>

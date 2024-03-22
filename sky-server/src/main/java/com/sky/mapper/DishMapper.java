@@ -13,9 +13,6 @@ import java.util.List;
 
 @Mapper
 public interface DishMapper {
-    @AutoFill(value = OperationType.UPDATE)
-    void updateStatusByCatId(@Param("id") Long id, @Param("status") Integer status);
-
     void deleteByCatId(@Param("id") Long id);
 
     @AutoFill(value = OperationType.INSERT)
@@ -31,4 +28,6 @@ public interface DishMapper {
     void update(Dish dish);
 
     List<Dish> selectByCatId(@Param("categoryId") Integer categoryId);
+
+    List<DishVO> selectByCatIdWithCatName(@Param("categoryId") Long categoryId);
 }
