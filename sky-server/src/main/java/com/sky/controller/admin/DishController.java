@@ -92,6 +92,6 @@ public class DishController {
     private void cleanCache(String pattern) {
         Set keys = redisTemplate.keys(pattern);
         redisTemplate.delete(keys);
-        log.info("key={}缓存失效", pattern);
+//        log.info("key={}缓存失效", pattern);
     }
 }

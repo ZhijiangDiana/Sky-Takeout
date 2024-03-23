@@ -35,7 +35,7 @@ public class DishController {
         List<DishVO> res = (List<DishVO>) redisTemplate.opsForValue().get(key);
         // 如果存在，直接返回
         if (res != null && !res.isEmpty()) {
-            log.info("缓存命中");
+//            log.info("缓存命中");
             return Result.success(res);
         }
 
@@ -43,7 +43,7 @@ public class DishController {
         res = dishService.catIdSelectWithFlavors(categoryId);
         // 将结果存入redis
         redisTemplate.opsForValue().set(key, res);
-        log.info("缓存未命中");
+//        log.info("缓存未命中");
 
         return Result.success(res);
     }
