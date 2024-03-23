@@ -12,4 +12,6 @@ public interface ShoppingCartMapper {
     void update(ShoppingCart shoppingCart);
 
     void insert(ShoppingCart shoppingCart);
+
+    void delete(ShoppingCart shoppingCart);
 }

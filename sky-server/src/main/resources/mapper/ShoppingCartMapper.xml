@@ -17,6 +17,19 @@
             <if test="amount != null">amount = #{amount}, </if>
         </set>
     </update>
+    <delete id="delete">
+        DELETE FROM shopping_cart
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="name != null and name != ''">AND `name` = #{name}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="dishId != null">AND dish_id = #{dishId}</if>
+            <if test="setmealId != null">AND setmeal_id = #{setmealId}</if>
+            <if test="id == null and (name == null || name == '') and userId == null and dishId == null and setmealId == null">
+                AND 1=0
+            </if>
+        </where>
+    </delete>
     <select id="select" resultType="com.sky.entity.ShoppingCart">
         SELECT * FROM shopping_cart
         <where>
