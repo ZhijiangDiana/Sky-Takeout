@@ -16,6 +16,7 @@
             <if test="number != null">`number` = #{number}, </if>
             <if test="amount != null">amount = #{amount}, </if>
         </set>
+        WHERE id = #{id};
     </update>
     <delete id="delete">
         DELETE FROM shopping_cart
@@ -25,7 +26,7 @@
             <if test="userId != null">AND user_id = #{userId}</if>
             <if test="dishId != null">AND dish_id = #{dishId}</if>
             <if test="setmealId != null">AND setmeal_id = #{setmealId}</if>
-            <if test="id == null and (name == null || name == '') and userId == null and dishId == null and setmealId == null">
+            <if test="id == null and (name == null or name == '') and userId == null and dishId == null and setmealId == null">
                 AND 1=0
             </if>
         </where>
