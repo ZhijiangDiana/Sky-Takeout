@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +23,28 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/list")
     @ApiOperation("根据分类id查询菜品")
     @FilterDisabled
     public Result<List<DishVO>> selectByCat(Long categoryId) {
-        List<DishVO> res = dishService.catIdSelectWithFlavors(categoryId);
+        String key = "dish_" + categoryId;
+        // 查询redis中是否存在菜品数据
+        List<DishVO> res = (List<DishVO>) redisTemplate.opsForValue().get(key);
+        // 如果存在，直接返回
+        if (res != null && !res.isEmpty()) {
+            log.info("缓存命中");
+            return Result.success(res);
+        }
+
+        // 如果不存在，再查询数据库
+        res = dishService.catIdSelectWithFlavors(categoryId);
+        // 将结果存入redis
+        redisTemplate.opsForValue().set(key, res);
+        log.info("缓存未命中");
+
         return Result.success(res);
     }
 

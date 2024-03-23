@@ -43,7 +43,7 @@ public class DisableItemFilterAspect {
 
         resList = resList.stream().filter(x -> {
             try {
-                return getStatus.invoke(x) == StatusConstant.ENABLE;
+                return StatusConstant.ENABLE.equals(getStatus.invoke(x));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
