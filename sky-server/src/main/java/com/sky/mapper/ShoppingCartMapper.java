@@ -14,4 +14,6 @@ public interface ShoppingCartMapper {
     void insert(ShoppingCart shoppingCart);
 
     void delete(ShoppingCart shoppingCart);
+
+    ShoppingCart selectOne(ShoppingCart shoppingCart);
 }

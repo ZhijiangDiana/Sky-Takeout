@@ -40,4 +40,13 @@
             <if test="dishFlavor != null">AND dish_flavor = #{dishFlavor}</if>
         </where>
     </select>
+    <select id="selectOne" resultType="com.sky.entity.ShoppingCart">
+        SELECT * FROM shopping_cart
+        <where>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="setmealId != null">AND setmeal_id = #{setmealId}</if>
+            <if test="dishId != null">AND dish_id = #{dishId}</if>
+            <if test="dishFlavor != null">AND dish_flavor = #{dishFlavor}</if>
+        </where>
+    </select>
 </mapper>
