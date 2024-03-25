@@ -39,9 +39,9 @@ public class OrderController {
     @PutMapping("/payment")
     @ApiOperation("订单支付")
     public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
-        log.info("订单支付：{}", ordersPaymentDTO);
+//        log.info("订单支付：{}", ordersPaymentDTO);
         OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
-        log.info("生成预支付交易单：{}", orderPaymentVO);
+//        log.info("生成预支付交易单：{}", orderPaymentVO);
         return Result.success(orderPaymentVO);
     }
 
@@ -56,8 +56,15 @@ public class OrderController {
     @ApiOperation(("查看订单详情"))
     public Result<OrdersPageQueryVO> getOrderDetails(@PathVariable Long id) {
         OrdersPageQueryVO res = orderService.getOrderDetails(id);
-        log.info(res.toString());
+//        log.info(res.toString());
         return Result.success(res);
+    }
+
+    @PutMapping("/cancel/{id}")
+    @ApiOperation("取消订单")
+    public Result<String> cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
+        return Result.success();
     }
 
 }

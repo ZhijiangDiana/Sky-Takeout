@@ -27,4 +27,6 @@ public interface OrderService {
     PageResult historyOrdersPageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 
     OrdersPageQueryVO getOrderDetails(Long id);
+
+    void cancelOrder(Long id);
 }

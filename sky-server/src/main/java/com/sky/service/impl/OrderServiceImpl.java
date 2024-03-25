@@ -203,4 +203,23 @@ public class OrderServiceImpl implements OrderService {
         res.setOrderDetailList(orderDetailMapper.select(orderDetailQuery));
         return res;
     }
+
+    @Override
+    public void cancelOrder(Long id) {
+        Orders orderQuery = Orders.builder().id(id).build();
+        Orders order = ordersMapper.selectOne(orderQuery);
+
+        if (order == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (order.getStatus() >= Orders.CONFIRMED || Orders.REFUND.equals(order.getPayStatus()))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        if (Orders.PAID.equals(order.getPayStatus())) {
+            // TODO 退款的请求可以在此处补上
+            order.setPayStatus(Orders.REFUND);
+        }
+        order.setStatus(Orders.CANCELLED);
+        order.setCancelReason("用户取消");
+        order.setCancelTime(LocalDateTime.now());
+        ordersMapper.update(order);
+    }
 }
