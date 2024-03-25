@@ -18,3 +18,17 @@ sky:
   wechat:
     appid: ${WECHAT_APPID}
     secret: ${WECHAT_SECRET}
+#    mchid: ${WECHAT_MCHID}
+#    mchSerialNo: ${WECHAT_MCH_SERIAL_NO}
+#    privateKeyFilePath: ${WECHAT_PRIVATE_KEY_FILE_PATH}
+#    apiV3Key: ${WECHAT_API_V3_KEY}
+#    weChatPayCertFilePath: ${WECHAT_PAY_CERT_FILE_PATH}
+#    notifyUrl: ${WECHAT_NOTIFY_URL}
+#    refundNotifyUrl: ${REFUND_NOTIFY_URL}
+    mchid: ${null}
+    mchSerialNo: ${null}
+    privateKeyFilePath: ${null}
+    apiV3Key: ${null}
+    weChatPayCertFilePath: ${null}
+    notifyUrl: ${null}
+    refundNotifyUrl: ${null}

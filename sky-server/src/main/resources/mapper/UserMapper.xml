@@ -10,4 +10,12 @@
     <select id="selectByOpenid" resultType="com.sky.entity.User">
         SELECT * FROM user WHERE openid = #{openid};
     </select>
+    <select id="selectOne" resultType="com.sky.entity.User">
+        SELECT * FROM user
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="openid != null">AND openid = #{openid}</if>
+            <if test="name != null">AND `name` = #{name}</if>
+        </where>
+    </select>
 </mapper>
