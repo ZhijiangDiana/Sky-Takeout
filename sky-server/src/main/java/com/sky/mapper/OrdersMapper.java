@@ -18,4 +18,6 @@ public interface OrdersMapper {
     Page<OrdersPageQueryVO> selectPage(Orders orders);
 
     Page<OrdersConditionQueryVO> selectCondition(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    Integer selectCnt(Orders ordersQuery);
 }

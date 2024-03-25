@@ -21,10 +21,7 @@ import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
-import com.sky.vo.OrderPaymentVO;
-import com.sky.vo.OrderSubmitVO;
-import com.sky.vo.OrdersConditionQueryVO;
-import com.sky.vo.OrdersPageQueryVO;
+import com.sky.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,5 +252,35 @@ public class OrderServiceImpl implements OrderService {
             o.setOrderDetailList(orderedDishes.toString());
         }
         return new PageResult(res.getTotal(), resList);
+    }
+
+    @Override
+    public OrderStatisticsVO orderStatusCnt() {
+        Orders ordersQuery = new Orders();
+        ordersQuery.setStatus(Orders.TO_BE_CONFIRMED);
+        Integer toBeConfirmedCnt = ordersMapper.selectCnt(ordersQuery);
+        ordersQuery.setStatus(Orders.CONFIRMED);
+        Integer confirmedCnt = ordersMapper.selectCnt(ordersQuery);
+        ordersQuery.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        Integer delivering = ordersMapper.selectCnt(ordersQuery);
+
+        return OrderStatisticsVO.builder()
+                .toBeConfirmed(toBeConfirmedCnt)
+                .confirmed(confirmedCnt)
+                .deliveryInProgress(delivering)
+                .build();
+    }
+
+    @Override
+    public OrdersPageQueryVO getOrderById(Long id) {
+        Orders ordersQuery = Orders.builder().id(id).build();
+        Orders orders = ordersMapper.selectOne(ordersQuery);
+        OrdersPageQueryVO res = new OrdersPageQueryVO();
+        BeanUtils.copyProperties(orders, res);
+
+        OrderDetail orderDetailQuery = OrderDetail.builder().orderId(id).build();
+        List<OrderDetail> details = orderDetailMapper.select(orderDetailQuery);
+        res.setOrderDetailList(details);
+        return res;
     }
 }
