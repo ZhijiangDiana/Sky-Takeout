@@ -25,6 +25,7 @@ sky:
 #    weChatPayCertFilePath: ${WECHAT_PAY_CERT_FILE_PATH}
 #    notifyUrl: ${WECHAT_NOTIFY_URL}
 #    refundNotifyUrl: ${REFUND_NOTIFY_URL}
+    enableWechatPay: false
     mchid: ${null}
     mchSerialNo: ${null}
     privateKeyFilePath: ${null}
