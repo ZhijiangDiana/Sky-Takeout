@@ -31,4 +31,6 @@ public interface OrderService {
     void cancelOrder(Long id);
 
     void getAnotherOrder(Long id);
+
+    PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
 }

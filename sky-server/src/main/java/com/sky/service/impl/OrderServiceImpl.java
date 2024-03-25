@@ -23,6 +23,7 @@ import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrdersConditionQueryVO;
 import com.sky.vo.OrdersPageQueryVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -238,5 +239,21 @@ public class OrderServiceImpl implements OrderService {
             for (int i = 0; i < orderDetail.getNumber(); i++)
                 shoppingCartService.addToShoppingCart(shoppingCartDTO);
         }
+    }
+
+    @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        Page<OrdersConditionQueryVO> res = ordersMapper.selectCondition(ordersPageQueryDTO);
+        List<OrdersConditionQueryVO> resList = res.getResult();
+        for (OrdersConditionQueryVO o : resList) {
+            OrderDetail orderDetailQuery = OrderDetail.builder().orderId(o.getId()).build();
+            List<OrderDetail> details = orderDetailMapper.select(orderDetailQuery);
+
+            StringBuilder orderedDishes = new StringBuilder();
+            details.forEach(d -> orderedDishes.append(d.getName()).append(" "));
+            o.setOrderDetailList(orderedDishes.toString());
+        }
+        return new PageResult(res.getTotal(), resList);
     }
 }

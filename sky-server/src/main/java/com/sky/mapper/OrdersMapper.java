@@ -1,7 +1,9 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
+import com.sky.vo.OrdersConditionQueryVO;
 import com.sky.vo.OrdersPageQueryVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,4 +16,6 @@ public interface OrdersMapper {
     Orders selectOne(Orders ordersQuery);
 
     Page<OrdersPageQueryVO> selectPage(Orders orders);
+
+    Page<OrdersConditionQueryVO> selectCondition(OrdersPageQueryDTO ordersPageQueryDTO);
 }
