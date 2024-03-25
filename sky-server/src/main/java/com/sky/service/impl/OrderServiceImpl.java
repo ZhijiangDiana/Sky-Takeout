@@ -9,6 +9,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -17,6 +18,7 @@ import com.sky.mapper.*;
 import com.sky.properties.WeChatProperties;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.service.ShoppingCartService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
@@ -58,6 +60,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private WeChatProperties weChatProperties;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
@@ -221,5 +226,17 @@ public class OrderServiceImpl implements OrderService {
         order.setCancelReason("用户取消");
         order.setCancelTime(LocalDateTime.now());
         ordersMapper.update(order);
+    }
+
+    @Override
+    public void getAnotherOrder(Long id) {
+        OrderDetail orderDetailQuery = OrderDetail.builder().orderId(id).build();
+        List<OrderDetail> details = orderDetailMapper.select(orderDetailQuery);
+        for (OrderDetail orderDetail : details) {
+            ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
+            BeanUtils.copyProperties(orderDetail, shoppingCartDTO);
+            for (int i = 0; i < orderDetail.getNumber(); i++)
+                shoppingCartService.addToShoppingCart(shoppingCartDTO);
+        }
     }
 }

@@ -29,4 +29,6 @@ public interface OrderService {
     OrdersPageQueryVO getOrderDetails(Long id);
 
     void cancelOrder(Long id);
+
+    void getAnotherOrder(Long id);
 }
