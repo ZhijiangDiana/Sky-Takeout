@@ -6,10 +6,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
-import com.sky.dto.ShoppingCartDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -282,5 +279,40 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> details = orderDetailMapper.select(orderDetailQuery);
         res.setOrderDetailList(details);
         return res;
+    }
+
+    @Override
+    public void confirmOrder(Long id) {
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.CONFIRMED)
+                .build();
+        ordersMapper.update(orders);
+    }
+
+    @Override
+    public void rejectOrder(OrdersRejectionDTO ordersRejectionDTO) {
+        Long id = ordersRejectionDTO.getId();
+        String rejectReason = ordersRejectionDTO.getRejectionReason();
+
+        Orders ordersQuery = Orders.builder().id(id).build();
+        Orders orderDB = ordersMapper.selectOne(ordersQuery);
+
+        if (orderDB == null || !Orders.TO_BE_CONFIRMED.equals(orderDB.getStatus()))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.CANCELLED)
+                .rejectionReason(rejectReason)
+                .cancelReason(rejectReason)
+                .cancelTime(LocalDateTime.now())
+                .build();
+        if (Orders.PAID.equals(orderDB.getPayStatus())) {
+            // TODO 调用微信支付退款
+            orders.setPayStatus(Orders.REFUND);
+        }
+
+        ordersMapper.update(orders);
     }
 }
