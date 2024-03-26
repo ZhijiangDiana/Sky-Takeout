@@ -1,9 +1,6 @@
 package com.sky.service;
 
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersRejectionDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
@@ -30,7 +27,7 @@ public interface OrderService {
 
     OrdersPageQueryVO getOrderDetails(Long id);
 
-    void cancelOrder(Long id);
+    void userCancelOrder(Long id);
 
     void getAnotherOrder(Long id);
 
@@ -43,4 +40,6 @@ public interface OrderService {
     void confirmOrder(Long id);
 
     void rejectOrder(OrdersRejectionDTO ordersRejectionDTO);
+
+    void adminCancelOrder(OrdersCancelDTO ordersCancelDTO);
 }

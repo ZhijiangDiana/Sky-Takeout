@@ -205,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(Long id) {
+    public void userCancelOrder(Long id) {
         Orders orderQuery = Orders.builder().id(id).build();
         Orders order = ordersMapper.selectOne(orderQuery);
 
@@ -305,7 +305,6 @@ public class OrderServiceImpl implements OrderService {
                 .id(id)
                 .status(Orders.CANCELLED)
                 .rejectionReason(rejectReason)
-                .cancelReason(rejectReason)
                 .cancelTime(LocalDateTime.now())
                 .build();
         if (Orders.PAID.equals(orderDB.getPayStatus())) {
@@ -314,5 +313,24 @@ public class OrderServiceImpl implements OrderService {
         }
 
         ordersMapper.update(orders);
+    }
+
+    @Override
+    public void adminCancelOrder(OrdersCancelDTO ordersCancelDTO) {
+        Orders orderQuery = Orders.builder().id(ordersCancelDTO.getId()).build();
+        Orders order = ordersMapper.selectOne(orderQuery);
+
+        if (order == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!Orders.CONFIRMED.equals(order.getStatus()))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        if (Orders.PAID.equals(order.getPayStatus())) {
+            // TODO 退款的请求可以在此处补上
+            order.setPayStatus(Orders.REFUND);
+        }
+        order.setStatus(Orders.CANCELLED);
+        order.setCancelReason(ordersCancelDTO.getCancelReason());
+        order.setCancelTime(LocalDateTime.now());
+        ordersMapper.update(order);
     }
 }
