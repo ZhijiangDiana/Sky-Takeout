@@ -19,6 +19,7 @@ import com.sky.service.ShoppingCartService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.*;
+import com.sky.ws.OrderNotifyWs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private OrderNotifyWs orderNotifyWs;
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
@@ -171,8 +175,14 @@ public class OrderServiceImpl implements OrderService {
                 .payStatus(Orders.PAID)
                 .checkoutTime(LocalDateTime.now())
                 .build();
-
         ordersMapper.update(orders);
+
+        // 向在线的管理端推送订单提醒
+        JSONObject newOrderNotification = new JSONObject();
+        newOrderNotification.put("type", Orders.NEW_ORDER);
+        newOrderNotification.put("orderId", ordersDB.getId());
+        newOrderNotification.put("content", "新订单：" + ordersDB.getNumber());
+        orderNotifyWs.sendToAllClient(newOrderNotification.toJSONString());
     }
 
     @Override
@@ -359,5 +369,14 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         order.setStatus(Orders.COMPLETED);
         ordersMapper.update(order);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        JSONObject reminder = new JSONObject();
+        reminder.put("type", Orders.NEW_ORDER);
+        reminder.put("orderId", id);
+        reminder.put("content", "客户催单：" + id);
+        orderNotifyWs.sendToAllClient(reminder.toJSONString());
     }
 }

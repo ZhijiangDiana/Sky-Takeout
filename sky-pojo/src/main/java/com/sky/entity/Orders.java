@@ -35,6 +35,12 @@ public class Orders implements Serializable {
     public static final Integer PAID = 1;
     public static final Integer REFUND = 2;
 
+    /**
+     * 订单推送常量 0催单 1新订单
+     */
+    public static final Integer REMIND = 2;
+    public static final Integer NEW_ORDER = 1;
+
     private static final long serialVersionUID = 1L;
 
     private Long id;
