@@ -333,4 +333,31 @@ public class OrderServiceImpl implements OrderService {
         order.setCancelTime(LocalDateTime.now());
         ordersMapper.update(order);
     }
+
+    @Override
+    public void deliverOrder(Long id) {
+        Orders orderQuery = Orders.builder().id(id).build();
+        Orders order = ordersMapper.selectOne(orderQuery);
+
+        if (order == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!Orders.CONFIRMED.equals(order.getStatus()))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        order.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        order.setDeliveryTime(LocalDateTime.now());
+        ordersMapper.update(order);
+    }
+
+    @Override
+    public void completeOrder(Long id) {
+        Orders orderQuery = Orders.builder().id(id).build();
+        Orders order = ordersMapper.selectOne(orderQuery);
+
+        if (order == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        if (!Orders.DELIVERY_IN_PROGRESS.equals(order.getStatus()))
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        order.setStatus(Orders.COMPLETED);
+        ordersMapper.update(order);
+    }
 }
