@@ -18,4 +18,7 @@
             <if test="name != null">AND `name` = #{name}</if>
         </where>
     </select>
+    <select id="selectCntByDate" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM user WHERE create_time BETWEEN #{begin} AND #{end};
+    </select>
 </mapper>

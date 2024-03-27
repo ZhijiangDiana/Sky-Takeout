@@ -6,6 +6,10 @@ import com.sky.entity.Orders;
 import com.sky.vo.OrdersConditionQueryVO;
 import com.sky.vo.OrdersPageQueryVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Mapper
 public interface OrdersMapper {
@@ -20,4 +24,10 @@ public interface OrdersMapper {
     Page<OrdersConditionQueryVO> selectCondition(OrdersPageQueryDTO ordersPageQueryDTO);
 
     Integer selectCnt(Orders ordersQuery);
+
+    Double selectSumByDate(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    Integer selectCntByDate(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
+
+    Integer selectValidCntByDate(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 }

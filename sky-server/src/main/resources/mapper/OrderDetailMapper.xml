@@ -14,4 +14,13 @@
             <if test="orderId != null">AND order_id = #{orderId}</if>
         </where>
     </select>
+    <select id="selectTop10ByDate" resultType="com.sky.entity.OrderDetail">
+        SELECT order_detail.name, SUM(order_detail.number) AS number FROM order_detail
+            LEFT OUTER JOIN orders ON order_detail.order_id = orders.id
+            WHERE orders.status = 5
+                AND orders.order_time BETWEEN #{begin} AND #{end}
+            GROUP BY order_detail.name
+            ORDER BY number DESC
+            LIMIT 10;
+    </select>
 </mapper>
