@@ -16,6 +16,12 @@ spring:
     host: ${sky.redis.host}
     port: ${sky.redis.port}
     database: ${sky.redis.database}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /SkyTakeOut
+    username: skytakeout
+    password: 114514
 
 mybatis:
   #mapper配置文件

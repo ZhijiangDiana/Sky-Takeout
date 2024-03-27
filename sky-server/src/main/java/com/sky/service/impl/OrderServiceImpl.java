@@ -11,16 +11,19 @@ import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
+import com.sky.extra.OrderTleMessage;
 import com.sky.mapper.*;
 import com.sky.properties.WeChatProperties;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
-import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.*;
 import com.sky.ws.OrderNotifyWs;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +31,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.TimerTask;
 
 @Service
 @Slf4j
@@ -62,6 +65,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderNotifyWs orderNotifyWs;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
@@ -103,6 +109,18 @@ public class OrderServiceImpl implements OrderService {
         // 清空购物车
         ShoppingCart scClearQuery = ShoppingCart.builder().userId(userId).build();
         shoppingCartMapper.delete(scClearQuery);
+
+//        log.info("{}订单等待支付", orders.getId());
+        // 将延时任务加入消息队列
+        OrderTleMessage orderTleMessage = OrderTleMessage.builder()
+                .tleType(OrderTleMessage.PAY_ORDER_TLE)
+                .orderId(orders.getId())
+                .build();
+        Message msg = MessageBuilder
+                .withBody(JSON.toJSONString(orderTleMessage).getBytes(StandardCharsets.UTF_8))
+                .setExpiration(OrderTleMessage.PAY_TIME_MS)
+                .build();
+        rabbitTemplate.convertAndSend("orderTleCancel.in.exchange", "114514", msg);
 
         // 封装VO返回结果
         OrderSubmitVO orderSubmitVO = OrderSubmitVO.builder()
@@ -356,6 +374,17 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Orders.DELIVERY_IN_PROGRESS);
         order.setDeliveryTime(LocalDateTime.now());
         ordersMapper.update(order);
+
+        // 将延时任务加入消息队列
+        OrderTleMessage orderTleMessage = OrderTleMessage.builder()
+                .tleType(OrderTleMessage.FINISH_ORDER_TLE)
+                .orderId(order.getId())
+                .build();
+        Message msg = MessageBuilder
+                .withBody(JSON.toJSONString(orderTleMessage).getBytes(StandardCharsets.UTF_8))
+                .setExpiration(OrderTleMessage.DELIVERY_FINISH_TIME_MS)
+                .build();
+        rabbitTemplate.convertAndSend("orderTleCancel.in.exchange", "114514", msg);
     }
 
     @Override
