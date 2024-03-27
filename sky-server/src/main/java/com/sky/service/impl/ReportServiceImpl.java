@@ -6,6 +6,7 @@ import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrdersMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.utils.DBDataUtils;
 import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
@@ -41,10 +42,7 @@ public class ReportServiceImpl implements ReportService {
         List<LocalDate> dateList = getDateList(begin, end);
         List<Double> amountList = new ArrayList<>();
 
-        dateList.forEach(d -> {
-            Double sum = ordersMapper.selectSumByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX));
-            amountList.add(sum == null ? 0 : sum);
-        });
+        dateList.forEach(d -> amountList.add(DBDataUtils.nullToZero(ordersMapper.selectSumByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX)))));
 
         return TurnoverReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
@@ -66,10 +64,7 @@ public class ReportServiceImpl implements ReportService {
         List<LocalDate> dateList = getDateList(begin, end);
         List<Integer> newUserList = new ArrayList<>();
 
-        dateList.forEach(d -> {
-            Integer cnt = userMapper.selectCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX));
-            newUserList.add(cnt == null ? 0 : cnt);
-        });
+        dateList.forEach(d -> newUserList.add(DBDataUtils.nullToZero(userMapper.selectCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX)))));
 
         List<Integer> totalUserList = new ArrayList<>();
         final Integer[] previous = {0};
@@ -92,16 +87,10 @@ public class ReportServiceImpl implements ReportService {
         List<Integer> orderCountList = new ArrayList<>();
         List<Integer> validOrderCountList = new ArrayList<>();
 
-        dateList.forEach(d -> {
-            Integer cnt = ordersMapper.selectCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX));
-            orderCountList.add(cnt == null ? 0 : cnt);
-        });
+        dateList.forEach(d -> orderCountList.add(DBDataUtils.nullToZero(ordersMapper.selectCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX)))));
         Integer orderCntSum = orderCountList.stream().reduce(0, Integer::sum);
 
-        dateList.forEach(d -> {
-            Integer cnt = ordersMapper.selectValidCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX));
-            validOrderCountList.add(cnt == null ? 0 : cnt);
-        });
+        dateList.forEach(d -> validOrderCountList.add(DBDataUtils.nullToZero(ordersMapper.selectValidCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX)))));
         Integer validOrderCnt = validOrderCountList.stream().reduce(0, Integer::sum);
 
         return OrderReportVO.builder()
@@ -110,7 +99,7 @@ public class ReportServiceImpl implements ReportService {
                 .validOrderCountList(StringUtils.join(validOrderCountList, ","))
                 .totalOrderCount(orderCntSum)
                 .validOrderCount(validOrderCnt)
-                .orderCompletionRate(1.0 * validOrderCnt / orderCntSum)
+                .orderCompletionRate(DBDataUtils.calculateRate(validOrderCnt, orderCntSum))
                 .build();
     }
 
