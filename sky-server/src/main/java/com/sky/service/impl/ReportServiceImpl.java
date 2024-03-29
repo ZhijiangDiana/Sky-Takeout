@@ -74,7 +74,7 @@ public class ReportServiceImpl implements ReportService {
         dateList.forEach(d -> newUserList.add(DBDataUtils.nullToZero(userMapper.selectCntByDate(d.atStartOfDay(), d.atTime(LocalTime.MAX)))));
 
         List<Integer> totalUserList = new ArrayList<>();
-        final Integer[] previous = {0};
+        final Integer[] previous = {userMapper.selectCntByDate(LocalDateTime.MIN, dateList.get(0).minusDays(1).atTime(LocalTime.MAX))};
         newUserList.forEach(d -> {
             Integer thisDay = previous[0] + d;
             totalUserList.add(thisDay);
