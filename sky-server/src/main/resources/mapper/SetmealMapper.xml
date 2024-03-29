@@ -50,4 +50,7 @@
     <select id="selectByCatId" resultType="com.sky.entity.Setmeal">
         SELECT * FROM setmeal WHERE category_id = #{categoryId};
     </select>
+    <select id="selectCntByStatus" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM setmeal WHERE status = #{status};
+    </select>
 </mapper>

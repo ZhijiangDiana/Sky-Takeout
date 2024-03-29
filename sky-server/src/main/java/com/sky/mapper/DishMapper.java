@@ -30,4 +30,6 @@ public interface DishMapper {
     List<Dish> selectByCatId(@Param("categoryId") Integer categoryId);
 
     List<DishVO> selectByCatIdWithCatName(@Param("categoryId") Long categoryId);
+
+    Integer selectCntByStatus(@Param("status") Integer status);
 }

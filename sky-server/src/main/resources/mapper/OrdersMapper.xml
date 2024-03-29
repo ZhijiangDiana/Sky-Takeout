@@ -73,4 +73,7 @@
     <select id="selectValidCntByDate" resultType="java.lang.Integer">
         SELECT COUNT(id) FROM orders WHERE order_time BETWEEN #{begin} AND #{end} AND status = 5;
     </select>
+    <select id="selectCntByStatus" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM orders WHERE status = #{status} AND order_time BETWEEN #{begin} AND #{end};
+    </select>
 </mapper>

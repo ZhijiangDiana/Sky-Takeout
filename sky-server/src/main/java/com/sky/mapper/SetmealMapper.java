@@ -29,4 +29,6 @@ public interface SetmealMapper {
     void update(Setmeal setmeal);
 
     List<Setmeal> selectByCatId(@Param("categoryId") Long categoryId);
+
+    Integer selectCntByStatus(@Param("status") Integer status);
 }

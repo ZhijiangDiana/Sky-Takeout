@@ -30,4 +30,6 @@ public interface OrdersMapper {
     Integer selectCntByDate(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
 
     Integer selectValidCntByDate(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end);
+
+    Integer selectCntByStatus(@Param("begin") LocalDateTime begin, @Param("end") LocalDateTime end, @Param("status") Integer status);
 }

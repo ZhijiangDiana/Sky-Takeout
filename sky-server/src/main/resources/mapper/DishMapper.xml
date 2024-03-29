@@ -52,4 +52,7 @@
             LEFT OUTER JOIN category c ON d.category_id = c.id
         WHERE category_id = #{categoryId};
     </select>
+    <select id="selectCntByStatus" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM dish WHERE status = #{status};
+    </select>
 </mapper>
