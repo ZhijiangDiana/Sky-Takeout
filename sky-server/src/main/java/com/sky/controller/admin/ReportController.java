@@ -8,12 +8,19 @@ import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import io.swagger.annotations.Api;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 
 @RestController
@@ -50,5 +57,14 @@ public class ReportController {
                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         SalesTop10ReportVO res = reportService.getSaleReport(begin, end);
         return Result.success(res);
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ServletOutputStream sos = resp.getOutputStream();
+        ServletContext context = req.getServletContext();
+        XSSFWorkbook res = reportService.getExcelData(context);
+        res.write(sos);
+        res.close();
     }
 }
